@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aryan Prasad — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1220;
+    --panel:#101A2E;
+    --line:#25324A;
+    --text:#E8ECF3;
+    --muted:#8B95AC;
+    --amber:#E8A33D;
+    --teal:#4FD1C5;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:48px 48px;
+    background-attachment:fixed;
+    background-position:center;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .wrap{max-width:880px; margin:0 auto; padding:0 24px;}
+
+  /* signature: confidence-interval divider */
+  .ci-divider{display:flex; align-items:center; gap:14px; margin:0 0 40px 0;}
+  .ci-divider .tick{width:1px; height:16px; background:var(--muted);}
+  .ci-divider .bar{flex:1; height:1px; background:linear-gradient(90deg, transparent, var(--muted) 20%, var(--muted) 80%, transparent);}
+  .ci-divider .dot{width:7px; height:7px; border-radius:50%; background:var(--amber); box-shadow:0 0 0 4px rgba(232,163,61,0.15);}
+  .ci-divider .label{font-size:12px; letter-spacing:.12em; color:var(--muted); text-transform:uppercase; white-space:nowrap;}
+
+  section{padding:96px 0;}
+  section:first-of-type{padding-top:120px;}
+
+  /* HERO */
+  .hero{padding-top:140px; padding-bottom:110px;}
+  .eyebrow{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--teal); margin-bottom:18px;}
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(40px, 7vw, 76px);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+  }
+  .interval-name{position:relative; display:inline-block;}
+  .interval-name .bound{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.28em;
+    color:var(--amber);
+    vertical-align:super;
+  }
+  .tagline{
+    margin-top:26px; max-width:560px;
+    font-size:19px; color:var(--muted); font-weight:400;
+  }
+  .hero-links{margin-top:34px; display:flex; gap:28px; flex-wrap:wrap;}
+  a{color:var(--text); text-decoration:none;}
+  .link-arrow{color:var(--amber); border-bottom:1px solid rgba(232,163,61,0.4); padding-bottom:2px; font-size:15px; transition:border-color .2s;}
+  .link-arrow:hover{border-color:var(--amber);}
+
+  .stack-row{margin-top:56px; display:flex; gap:10px; flex-wrap:wrap;}
+  .chip{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--muted);
+    border:1px solid var(--line); border-radius:3px; padding:6px 12px;
+    background:rgba(255,255,255,0.02);
+  }
+
+  h2{
+    font-family:'Fraunces', serif; font-weight:600; font-size:32px;
+    margin-bottom:10px;
+  }
+  .section-num{font-family:'IBM Plex Mono', monospace; color:var(--amber); font-size:14px;}
+
+  /* EDUCATION timeline */
+  .edu-row{
+    display:grid; grid-template-columns:120px 1fr; gap:24px;
+    padding:22px 0; border-top:1px solid var(--line);
+  }
+  .edu-row:last-child{border-bottom:1px solid var(--line);}
+  .edu-year{font-family:'IBM Plex Mono', monospace; color:var(--teal); font-size:14px; padding-top:2px;}
+  .edu-inst{font-weight:600; font-size:16.5px;}
+  .edu-detail{color:var(--muted); font-size:14.5px; margin-top:4px;}
+
+  /* PROJECTS */
+  .project{
+    border:1px solid var(--line); border-radius:6px; padding:28px;
+    margin-bottom:20px; background:var(--panel);
+  }
+  .project-head{display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap;}
+  .project h3{font-family:'Fraunces', serif; font-size:21px; font-weight:600;}
+  .project p{color:var(--muted); font-size:15px; margin-top:10px;}
+  .project-tags{margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;}
+  .tag{font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--amber); border:1px solid rgba(232,163,61,0.35); border-radius:3px; padding:3px 9px;}
+
+  /* RESEARCH */
+  .research-item{padding:24px 0; border-top:1px solid var(--line);}
+  .research-item:last-child{border-bottom:1px solid var(--line);}
+  .research-item h3{font-family:'Fraunces', serif; font-size:20px; font-weight:600; margin-bottom:8px;}
+  .research-item p{color:var(--muted); font-size:15px;}
+  .metric{color:var(--teal); font-family:'IBM Plex Mono', monospace; font-size:14px;}
+
+  /* EXPERIENCE */
+  .exp-item{margin-bottom:32px;}
+  .exp-role{font-weight:600; font-size:16.5px;}
+  .exp-org{color:var(--teal); font-family:'IBM Plex Mono', monospace; font-size:13px; margin-left:8px;}
+  .exp-item ul{margin-top:10px; padding-left:18px; color:var(--muted); font-size:15px;}
+  .exp-item li{margin-bottom:6px;}
+
+  /* CONTACT */
+  .contact-box{
+    border:1px solid var(--line); border-radius:6px; padding:44px;
+    background:var(--panel); text-align:center;
+  }
+  .contact-box p{color:var(--muted); margin-bottom:24px;}
+  .contact-box .link-arrow{font-size:17px;}
+
+  footer{padding:40px 0; text-align:center; color:var(--muted); font-size:13px; font-family:'IBM Plex Mono', monospace;}
+
+  @media(max-width:640px){
+    .edu-row{grid-template-columns:1fr; gap:6px;}
+    section{padding:64px 0;}
+    .hero{padding-top:90px; padding-bottom:70px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="eyebrow">Data Science &amp; AI · IIT Madras</div>
+    <h1>Aryan Prasad<span class="interval-name"><span class="bound">±σ</span></span></h1>
+    <p class="tagline">M.Tech student working on <strong style="color:var(--text)">uncertainty quantification for LLMs</strong> — establishing confidence bounds on predictions, after four years in mechanical engineering.</p>
+    <div class="hero-links">
+      <a class="link-arrow" href="https://github.com/Keshav0141" target="_blank">My GitHub →</a>
+      <a class="link-arrow" href="#research">Research →</a>
+      <a class="link-arrow" href="#contact">Get in touch →</a>
+    </div>
+    <div class="stack-row">
+      <span class="chip">PyTorch</span>
+      <span class="chip">LangChain</span>
+      <span class="chip">MLflow · DVC</span>
+      <span class="chip">Power BI</span>
+      <span class="chip">FastAPI</span>
+      <span class="chip">Docker</span>
+    </div>
+  </section>
+
+  <div class="ci-divider"><div class="tick"></div><div class="bar"></div><div class="dot"></div><div class="bar"></div><div class="label">Education</div><div class="tick"></div></div>
+
+  <!-- EDUCATION -->
+  <section id="education" style="padding-top:0;">
+    <div class="edu-row">
+      <div class="edu-year">2025–27</div>
+      <div><div class="edu-inst">M.Tech, Data Science &amp; AI — IIT Madras</div><div class="edu-detail">CGPA 8.27/10 · Thesis: LLMs — Establishing Confidence Bounds on Predictions</div></div>
+    </div>
+    <div class="edu-row">
+      <div class="edu-year">2019–23</div>
+      <div><div class="edu-inst">B.Tech, Mechanical Engineering — IIT Madras</div><div class="edu-detail">CGPA 7.59/10</div></div>
+    </div>
+    <div class="edu-row">
+      <div class="edu-year">2019</div>
+      <div><div class="edu-inst">Class XII — St. Paul School and Jr. College</div><div class="edu-detail">80.31%</div></div>
+    </div>
+    <div class="edu-row">
+      <div class="edu-year">2017</div>
+      <div><div class="edu-inst">Class X — Kendriya Vidyalaya Ambajhari Nagpur</div><div class="edu-detail">10/10 CGPA · JLPT N3 (Dec 2025) passed alongside coursework</div></div>
+    </div>
+  </section>
+
+  <div class="ci-divider"><div class="tick"></div><div class="bar"></div><div class="dot"></div><div class="bar"></div><div class="label">Projects</div><div class="tick"></div></div>
+
+  <!-- PROJECTS -->
+  <section id="projects" style="padding-top:0;">
+    <div class="project">
+      <div class="project-head">
+        <h3>GPT From Scratch</h3>
+        <a class="link-arrow" href="https://github.com/Keshav0141/gpt-from-scratch" target="_blank">Repo →</a>
+      </div>
+      <p>GPT-2 style transformer built in PyTorch with a custom BPE tokenizer — zero HuggingFace dependency. Multi-head self-attention, causal masking, configurable depth. LoRA fine-tuning cut trainable parameters by ~90% while preserving generation quality; perplexity tracked across scales to verify scaling-law trends.</p>
+      <div class="project-tags"><span class="tag">PyTorch</span><span class="tag">BPE</span><span class="tag">LoRA</span><span class="tag">Scaling Laws</span></div>
+    </div>
+    <div class="project">
+      <div class="project-head">
+        <h3>CerebroNet</h3>
+        <a class="link-arrow" href="https://github.com/Keshav0141" target="_blank">GitHub →</a>
+      </div>
+      <p>Brain tumor MRI classifier with a full MLOps stack: 7-stage DVC pipeline, MLflow tracking, Airflow orchestration. Deployed via FastAPI + Docker Compose, monitored with Prometheus + Grafana. Compared 5 CNN architectures, reaching 94%+ accuracy with CI/CD-driven retraining.</p>
+      <div class="project-tags"><span class="tag">DVC</span><span class="tag">MLflow</span><span class="tag">Airflow</span><span class="tag">Docker</span></div>
+    </div>
+    <div class="project">
+      <div class="project-head">
+        <h3>Confident-RAG</h3>
+        <a class="link-arrow" href="https://github.com/Keshav0141" target="_blank">GitHub →</a>
+      </div>
+      <p>Jaccard-based confidence scoring over sampled LLM outputs — a lightweight black-box uncertainty estimator built as an MTP prototype, connecting directly to my thesis work on confidence bounds for LLM predictions.</p>
+      <div class="project-tags"><span class="tag">LangChain</span><span class="tag">UQ</span><span class="tag">RAG</span></div>
+    </div>
+  </section>
+
+  <div class="ci-divider"><div class="tick"></div><div class="bar"></div><div class="dot"></div><div class="bar"></div><div class="label">Research</div><div class="tick"></div></div>
+
+  <!-- RESEARCH -->
+  <section id="research" style="padding-top:0;">
+    <div class="research-item">
+      <h3>LLMs — Establishing Confidence Bounds on Predictions</h3>
+      <p>M.Tech thesis, advised by Prof. Sri Vallabha Deevi. Studying black-box uncertainty quantification for LLM outputs — <span class="metric">semantic entropy</span>, <span class="metric">kernel language entropy</span>, graph-based methods (NumSet, EigV, Deg, Ecc), and conformal prediction — toward practical confidence estimates that don't require model internals.</p>
+    </div>
+    <div class="research-item">
+      <h3>Foundations</h3>
+      <p>Worked through scaling laws, SFT, PPO vs. DPO, and latent-space representations as they connect to uncertainty estimation, alongside coursework in Machine Learning Operations, Modern Computer Vision, and Mathematical Foundations for Data Science.</p>
+    </div>
+  </section>
+
+  <div class="ci-divider"><div class="tick"></div><div class="bar"></div><div class="dot"></div><div class="bar"></div><div class="label">Experience</div><div class="tick"></div></div>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" style="padding-top:0;">
+    <div class="exp-item">
+      <span class="exp-role">AI/Pricing Intern</span><span class="exp-org">SKF INDIA, PUNE</span>
+      <ul>
+        <li>Built Power BI dashboards consolidating regional Excel pricing data, with live NetSuite data refresh</li>
+        <li>Delivered a three-page Australia pricing report — overview, obsolescence, no-sales analysis — with custom DAX measures and Power Query columns</li>
+      </ul>
+    </div>
+    <div class="exp-item">
+      <span class="exp-role">Research Intern</span><span class="exp-org">BHEL</span>
+      <ul>
+        <li>Researched techniques to convert plastic waste into usable product</li>
+        <li>Designed refugee shelters using fusion design principles, cutting material cost by 25%</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="ci-divider"><div class="tick"></div><div class="bar"></div><div class="dot"></div><div class="bar"></div><div class="label">Contact</div><div class="tick"></div></div>
+
+  <!-- CONTACT -->
+  <section id="contact" style="padding-top:0; padding-bottom:70px;">
+    <div class="contact-box">
+      <p>Working on LLM uncertainty, agentic pipelines, or anything at the intersection of ML and mechanical engineering? Let's talk.</p>
+      <a class="link-arrow" href="https://github.com/Keshav0141" target="_blank">github.com/Keshav0141 →</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>built by Aryan Prasad · 2026</footer>
+
+</body>
+</html>
