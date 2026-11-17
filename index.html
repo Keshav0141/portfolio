@@ -3,260 +3,363 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aryan Prasad — Portfolio</title>
+<title>Aryan Prasad | Uncertainty quantification for LLMs</title>
+<meta name="description" content="Aryan Prasad, M.Tech in Data Science and AI at IIT Madras. My thesis combines uncertainty-quantification methods to flag when an LLM's answer can't be trusted.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0B1220;
-    --panel:#101A2E;
-    --line:#25324A;
-    --text:#E8ECF3;
-    --muted:#8B95AC;
-    --amber:#E8A33D;
-    --teal:#4FD1C5;
+    --paper:#1a1d21; --panel:#202328; --chip:#272b31; --ink:#eceff3; --muted:#9aa2ad; --rule:#2c3036; --line:#4a515b; --grid:#272b31;
+    --blue:#4d8dff; --c2:#c3c9d2; --c3:#8a929d; --c4:#5d646e; --orange-ink:#f3a73b;
+    --sans:'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono:'JetBrains Mono', ui-monospace, Menlo, monospace;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:'Inter', sans-serif;
-    line-height:1.6;
-    background-image:
-      linear-gradient(var(--line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line) 1px, transparent 1px);
-    background-size:48px 48px;
-    background-attachment:fixed;
-    background-position:center;
+  html{scroll-behavior:smooth; scroll-padding-top:76px; color-scheme:dark;}
+  ::selection{background:var(--blue); color:#0d1117;}
+  body{background:var(--paper); color:var(--ink); font:400 17px/1.65 var(--sans); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;}
+  a{color:var(--blue); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px;}
+  a:hover{text-decoration-thickness:2px;}
+  :focus-visible{outline:2px solid var(--blue); outline-offset:3px;}
+  .page{max-width:1040px; margin:0 auto; padding:0 28px;}
+  .measure{max-width:640px;}
+  .pm{color:var(--blue); font-style:normal; font-weight:400; position:relative; top:-1.2em; vertical-align:baseline; font-size:.36em; margin-left:.1em;}
+
+  /* nav */
+  .nav{position:sticky; top:0; z-index:10; background:rgba(26,29,33,.88); backdrop-filter:blur(6px); border-bottom:1px solid var(--rule);}
+  .nav .page{display:flex; align-items:center; justify-content:space-between; gap:24px; height:60px;}
+  .brand{font-weight:600; font-size:17px; color:var(--ink); text-decoration:none; white-space:nowrap;}
+  .brand .pm{font-size:.75em; top:-.45em;}
+  .nav nav{min-width:0;}
+  .nav ul{list-style:none; display:flex; gap:26px; overflow-x:auto;}
+  .nav ul a{color:var(--muted); text-decoration:none; font-size:16px; white-space:nowrap;}
+  .nav ul a:hover{color:var(--ink);}
+
+  /* title block, set like the first page of a paper */
+  .title{text-align:center; padding-top:92px;}
+  h1{font-size:clamp(44px, 7.4vw, 80px); line-height:1.02; font-weight:700; font-stretch:118%; letter-spacing:-.03em;}
+  .affil{margin-top:16px; color:var(--muted); font-size:18px;}
+  .reach{margin-top:8px; display:flex; justify-content:center; gap:22px; flex-wrap:wrap; font-size:17px;}
+  .abstract{margin:40px auto 0; text-align:left; font-size:18px; line-height:1.7;}
+
+  /* figures and captions */
+  .fig{margin-top:56px;}
+  figcaption, .tcap{font-size:15.5px; color:var(--muted); max-width:760px; line-height:1.55;}
+  figcaption{margin-top:14px;}
+  figcaption b, .tcap b{color:var(--ink); font-weight:600;}
+
+  /* Figure 1: sampling demo, drawn like plot axes */
+  .demo{border:1px solid var(--line); padding:28px 30px 26px; background-color:var(--panel);
+    background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:40px 40px; background-position:-1px -1px;}
+  .demo-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px 24px; flex-wrap:wrap;}
+  .prompt{font-size:22px; line-height:1.35; font-weight:500; max-width:560px;}
+  .prompt b{font-style:normal; font-weight:600; margin-right:.35em;}
+  .toggle{display:inline-flex; border:1px solid var(--line); background:transparent; flex:none;}
+  .toggle button{font:inherit; font-size:15px; line-height:1.2; padding:8px 14px; border:0; background:none; color:var(--ink); cursor:pointer;}
+  .toggle button + button{border-left:1px solid var(--line);}
+  .toggle button[aria-pressed="true"]{background:var(--blue); color:#0d1117;}
+  .step{margin-top:24px; font-size:15px; color:var(--muted);}
+  .samples{list-style:none; display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; min-height:38px;}
+  .samples li{font:500 14px/1.4 var(--mono); padding:7px 11px; background:var(--chip); border:1px solid var(--rule); opacity:0; transform:translateY(6px);
+    transition:opacity .3s, transform .3s, border-color .5s, box-shadow .5s;}
+  .samples li.in{opacity:1; transform:none;}
+  .samples li.grouped{border-color:var(--c); box-shadow:inset 4px 0 0 var(--c);}
+  .bar{display:flex; height:14px; margin-top:12px; background:var(--grid);}
+  .bar span{width:0; background:var(--c); transition:width .7s cubic-bezier(.2,.7,.2,1);}
+  .legend{display:flex; flex-wrap:wrap; gap:6px 20px; margin-top:10px; font-size:15px;}
+  .legend i{display:inline-block; width:10px; height:10px; margin-right:7px; background:var(--c);}
+  .stats{display:grid; grid-template-columns:1fr 1.3fr 1.5fr; gap:20px; margin-top:26px; padding-top:18px; border-top:1px solid var(--rule); opacity:.3; transition:opacity .5s;}
+  .stats.in{opacity:1;}
+  .stats dt{font-size:14.5px; color:var(--muted);}
+  .stats dd{font-size:26px; font-weight:600; line-height:1.25; font-variant-numeric:lining-nums tabular-nums;}
+  .stats small{font-size:15px; font-weight:400; color:var(--muted);}
+  #dec{font-size:22px;}
+  #dec.ok{color:var(--blue);}
+  #dec.esc{color:var(--orange-ink);}
+
+  /* sections */
+  .sec{padding-top:96px;}
+  .sec > h2{font-size:34px; line-height:1.2; font-weight:700; font-stretch:112%; letter-spacing:-.02em; margin-bottom:26px;}
+  .thesis-title{font-size:24px; line-height:1.3; font-weight:650; font-stretch:106%;}
+  .meta{margin-top:6px; color:var(--muted);}
+  .lead{margin-top:16px;}
+  .after{margin-top:28px;}
+
+  /* Figure 2: thesis pipeline */
+  .pipeline{list-style:none; display:grid; grid-template-columns:repeat(4, 1fr); border-top:2px solid var(--line); border-bottom:2px solid var(--line);}
+  .pipeline li{position:relative; padding:22px 24px 24px 0;}
+  .pipeline li + li{padding-left:24px; border-left:1px solid var(--rule);}
+  .pipeline li + li::before{content:""; position:absolute; left:-6px; top:30px; width:10px; height:10px; background:var(--paper);
+    border-top:1px solid var(--line); border-right:1px solid var(--line); transform:rotate(45deg);}
+  .pipeline .n{font-size:15px; color:var(--muted); font-variant-numeric:lining-nums;}
+  .pipeline h4{font-size:21px; font-weight:600; margin:2px 0 6px;}
+  .pipeline p{font-size:15.5px; color:var(--muted); line-height:1.55;}
+  .pipeline .out{display:flex; flex-direction:column; gap:2px; margin-top:12px;}
+  .out .ok{color:var(--blue);}
+  .out .esc{color:var(--orange-ink);}
+
+  /* Table 1: projects, booktabs rules */
+  .tcap{margin-bottom:12px;}
+  .results{width:100%; border-collapse:collapse; border-top:2px solid var(--line); border-bottom:2px solid var(--line); font-size:16px;}
+  .results thead th{border-bottom:1px solid var(--line); text-align:left; font-weight:600; font-size:15px; padding:10px 20px 10px 0;}
+  .results tbody th, .results td{padding:20px 20px 20px 0; vertical-align:top; text-align:left; border-bottom:1px solid var(--rule);}
+  .results tbody tr:last-child > *{border-bottom:0;}
+  .results tbody th{font-weight:600; font-size:18px; width:23%;}
+  .results td:nth-child(2){color:var(--muted); width:49%;}
+  .results td:last-child{width:28%; padding-right:0;}
+  .links{display:flex; gap:14px; margin-top:6px; font-weight:400; font-size:15px;}
+  .num{display:block; font-size:30px; font-weight:700; font-stretch:110%; line-height:1.15; font-variant-numeric:lining-nums tabular-nums;}
+  .sub{color:var(--muted); font-size:15px;}
+
+  /* experience and education */
+  .entries{list-style:none; border-top:1px solid var(--line);}
+  .entries > li{display:grid; grid-template-columns:170px 1fr; gap:24px; padding:22px 0; border-bottom:1px solid var(--rule);}
+  .when{color:var(--muted); font-size:16px; padding-top:2px; font-variant-numeric:lining-nums tabular-nums;}
+  .entries h3{font-size:19px; font-weight:600; line-height:1.4;}
+  .org{font-weight:400; color:var(--muted);}
+  .entries ul{margin-top:8px; padding-left:18px; color:var(--muted); font-size:16.5px;}
+  .entries ul li{margin-bottom:4px;}
+  .detail{margin-top:4px; color:var(--muted); font-size:16.5px;}
+
+  /* contact */
+  .big{margin-top:18px; font-size:clamp(24px, 4vw, 34px); line-height:1.3; overflow-wrap:anywhere;}
+  .also{margin-top:10px; display:flex; gap:22px; font-size:17px;}
+  footer.page{margin:96px auto 0; border-top:1px solid var(--rule); padding-top:22px; padding-bottom:40px; font-size:15px; color:var(--muted);}
+
+  @media (max-width:760px){
+    body{font-size:17px;}
+    .brand{display:none;}
+    .nav .page{padding:0 18px;}
+    .nav ul{gap:14px;}
+    .nav ul a{font-size:15px;}
+    .reach{gap:4px 22px;}
+    .title{padding-top:56px;}
+    .abstract{font-size:18px;}
+    .demo{padding:20px 18px;}
+    .prompt{font-size:20px;}
+    .stats{grid-template-columns:1fr 1fr;}
+    .stats div:last-child{grid-column:1 / -1;}
+    .sec{padding-top:72px;}
+    .pipeline{grid-template-columns:1fr;}
+    .pipeline li, .pipeline li + li{padding:20px 0; border-left:0;}
+    .pipeline li + li{border-top:1px solid var(--rule);}
+    .pipeline li + li::before{left:18px; top:-6px; transform:rotate(135deg);}
+    .results thead{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);}
+    .results tr{display:block; padding:18px 0; border-bottom:1px solid var(--rule);}
+    .results tbody tr:last-child{border-bottom:0;}
+    .results tbody th, .results td{display:block; width:auto !important; padding:0 !important; border:0 !important;}
+    .results td{margin-top:8px;}
+    .entries > li{grid-template-columns:1fr; gap:4px;}
   }
-  .mono{font-family:'IBM Plex Mono', monospace;}
-  .wrap{max-width:880px; margin:0 auto; padding:0 24px;}
-
-  /* signature: confidence-interval divider */
-  .ci-divider{display:flex; align-items:center; gap:14px; margin:0 0 40px 0;}
-  .ci-divider .tick{width:1px; height:16px; background:var(--muted);}
-  .ci-divider .bar{flex:1; height:1px; background:linear-gradient(90deg, transparent, var(--muted) 20%, var(--muted) 80%, transparent);}
-  .ci-divider .dot{width:7px; height:7px; border-radius:50%; background:var(--amber); box-shadow:0 0 0 4px rgba(232,163,61,0.15);}
-  .ci-divider .label{font-size:12px; letter-spacing:.12em; color:var(--muted); text-transform:uppercase; white-space:nowrap;}
-
-  section{padding:96px 0;}
-  section:first-of-type{padding-top:120px;}
-
-  /* HERO */
-  .hero{padding-top:140px; padding-bottom:110px;}
-  .eyebrow{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--teal); margin-bottom:18px;}
-  h1{
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:clamp(40px, 7vw, 76px);
-    line-height:1.05;
-    letter-spacing:-0.01em;
-  }
-  .interval-name{position:relative; display:inline-block;}
-  .interval-name .bound{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:0.28em;
-    color:var(--amber);
-    vertical-align:super;
-  }
-  .tagline{
-    margin-top:26px; max-width:560px;
-    font-size:19px; color:var(--muted); font-weight:400;
-  }
-  .hero-links{margin-top:34px; display:flex; gap:28px; flex-wrap:wrap;}
-  a{color:var(--text); text-decoration:none;}
-  .link-arrow{color:var(--amber); border-bottom:1px solid rgba(232,163,61,0.4); padding-bottom:2px; font-size:15px; transition:border-color .2s;}
-  .link-arrow:hover{border-color:var(--amber);}
-
-  .stack-row{margin-top:56px; display:flex; gap:10px; flex-wrap:wrap;}
-  .chip{
-    font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--muted);
-    border:1px solid var(--line); border-radius:3px; padding:6px 12px;
-    background:rgba(255,255,255,0.02);
-  }
-
-  h2{
-    font-family:'Fraunces', serif; font-weight:600; font-size:32px;
-    margin-bottom:10px;
-  }
-  .section-num{font-family:'IBM Plex Mono', monospace; color:var(--amber); font-size:14px;}
-
-  /* EDUCATION timeline */
-  .edu-row{
-    display:grid; grid-template-columns:120px 1fr; gap:24px;
-    padding:22px 0; border-top:1px solid var(--line);
-  }
-  .edu-row:last-child{border-bottom:1px solid var(--line);}
-  .edu-year{font-family:'IBM Plex Mono', monospace; color:var(--teal); font-size:14px; padding-top:2px;}
-  .edu-inst{font-weight:600; font-size:16.5px;}
-  .edu-detail{color:var(--muted); font-size:14.5px; margin-top:4px;}
-
-  /* PROJECTS */
-  .project{
-    border:1px solid var(--line); border-radius:6px; padding:28px;
-    margin-bottom:20px; background:var(--panel);
-  }
-  .project-head{display:flex; justify-content:space-between; align-items:baseline; gap:16px; flex-wrap:wrap;}
-  .project h3{font-family:'Fraunces', serif; font-size:21px; font-weight:600;}
-  .project p{color:var(--muted); font-size:15px; margin-top:10px;}
-  .project-tags{margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;}
-  .tag{font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--amber); border:1px solid rgba(232,163,61,0.35); border-radius:3px; padding:3px 9px;}
-
-  /* RESEARCH */
-  .research-item{padding:24px 0; border-top:1px solid var(--line);}
-  .research-item:last-child{border-bottom:1px solid var(--line);}
-  .research-item h3{font-family:'Fraunces', serif; font-size:20px; font-weight:600; margin-bottom:8px;}
-  .research-item p{color:var(--muted); font-size:15px;}
-  .metric{color:var(--teal); font-family:'IBM Plex Mono', monospace; font-size:14px;}
-
-  /* EXPERIENCE */
-  .exp-item{margin-bottom:32px;}
-  .exp-role{font-weight:600; font-size:16.5px;}
-  .exp-org{color:var(--teal); font-family:'IBM Plex Mono', monospace; font-size:13px; margin-left:8px;}
-  .exp-item ul{margin-top:10px; padding-left:18px; color:var(--muted); font-size:15px;}
-  .exp-item li{margin-bottom:6px;}
-
-  /* CONTACT */
-  .contact-box{
-    border:1px solid var(--line); border-radius:6px; padding:44px;
-    background:var(--panel); text-align:center;
-  }
-  .contact-box p{color:var(--muted); margin-bottom:24px;}
-  .contact-box .link-arrow{font-size:17px;}
-
-  footer{padding:40px 0; text-align:center; color:var(--muted); font-size:13px; font-family:'IBM Plex Mono', monospace;}
-
-  @media(max-width:640px){
-    .edu-row{grid-template-columns:1fr; gap:6px;}
-    section{padding:64px 0;}
-    .hero{padding-top:90px; padding-bottom:70px;}
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important; scroll-behavior:auto !important;}
   }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="eyebrow">Data Science &amp; AI · IIT Madras</div>
-    <h1>Aryan Prasad<span class="interval-name"><span class="bound">±σ</span></span></h1>
-    <p class="tagline">M.Tech student working on <strong style="color:var(--text)">uncertainty quantification for LLMs</strong> — establishing confidence bounds on predictions, after four years in mechanical engineering.</p>
-    <div class="hero-links">
-      <a class="link-arrow" href="https://github.com/Keshav0141" target="_blank">My GitHub →</a>
-      <a class="link-arrow" href="#research">Research →</a>
-      <a class="link-arrow" href="#contact">Get in touch →</a>
-    </div>
-    <div class="stack-row">
-      <span class="chip">PyTorch</span>
-      <span class="chip">LangChain</span>
-      <span class="chip">MLflow · DVC</span>
-      <span class="chip">Power BI</span>
-      <span class="chip">FastAPI</span>
-      <span class="chip">Docker</span>
-    </div>
-  </section>
-
-  <div class="ci-divider"><div class="tick"></div><div class="bar"></div><div class="dot"></div><div class="bar"></div><div class="label">Education</div><div class="tick"></div></div>
-
-  <!-- EDUCATION -->
-  <section id="education" style="padding-top:0;">
-    <div class="edu-row">
-      <div class="edu-year">2025–27</div>
-      <div><div class="edu-inst">M.Tech, Data Science &amp; AI — IIT Madras</div><div class="edu-detail">CGPA 8.27/10 · Thesis: LLMs — Establishing Confidence Bounds on Predictions</div></div>
-    </div>
-    <div class="edu-row">
-      <div class="edu-year">2019–23</div>
-      <div><div class="edu-inst">B.Tech, Mechanical Engineering — IIT Madras</div><div class="edu-detail">CGPA 7.59/10</div></div>
-    </div>
-    <div class="edu-row">
-      <div class="edu-year">2019</div>
-      <div><div class="edu-inst">Class XII — St. Paul School and Jr. College</div><div class="edu-detail">80.31%</div></div>
-    </div>
-    <div class="edu-row">
-      <div class="edu-year">2017</div>
-      <div><div class="edu-inst">Class X — Kendriya Vidyalaya Ambajhari Nagpur</div><div class="edu-detail">10/10 CGPA · JLPT N3 (Dec 2025) passed alongside coursework</div></div>
-    </div>
-  </section>
-
-  <div class="ci-divider"><div class="tick"></div><div class="bar"></div><div class="dot"></div><div class="bar"></div><div class="label">Projects</div><div class="tick"></div></div>
-
-  <!-- PROJECTS -->
-  <section id="projects" style="padding-top:0;">
-    <div class="project">
-      <div class="project-head">
-        <h3>GPT From Scratch</h3>
-        <a class="link-arrow" href="https://github.com/Keshav0141/gpt-from-scratch" target="_blank">Repo →</a>
-      </div>
-      <p>GPT-2 style transformer built in PyTorch with a custom BPE tokenizer — zero HuggingFace dependency. Multi-head self-attention, causal masking, configurable depth. LoRA fine-tuning cut trainable parameters by ~90% while preserving generation quality; perplexity tracked across scales to verify scaling-law trends.</p>
-      <div class="project-tags"><span class="tag">PyTorch</span><span class="tag">BPE</span><span class="tag">LoRA</span><span class="tag">Scaling Laws</span></div>
-    </div>
-    <div class="project">
-      <div class="project-head">
-        <h3>CerebroNet</h3>
-        <a class="link-arrow" href="https://github.com/Keshav0141" target="_blank">GitHub →</a>
-      </div>
-      <p>Brain tumor MRI classifier with a full MLOps stack: 7-stage DVC pipeline, MLflow tracking, Airflow orchestration. Deployed via FastAPI + Docker Compose, monitored with Prometheus + Grafana. Compared 5 CNN architectures, reaching 94%+ accuracy with CI/CD-driven retraining.</p>
-      <div class="project-tags"><span class="tag">DVC</span><span class="tag">MLflow</span><span class="tag">Airflow</span><span class="tag">Docker</span></div>
-    </div>
-    <div class="project">
-      <div class="project-head">
-        <h3>Confident-RAG</h3>
-        <a class="link-arrow" href="https://github.com/Keshav0141" target="_blank">GitHub →</a>
-      </div>
-      <p>Jaccard-based confidence scoring over sampled LLM outputs — a lightweight black-box uncertainty estimator built as an MTP prototype, connecting directly to my thesis work on confidence bounds for LLM predictions.</p>
-      <div class="project-tags"><span class="tag">LangChain</span><span class="tag">UQ</span><span class="tag">RAG</span></div>
-    </div>
-  </section>
-
-  <div class="ci-divider"><div class="tick"></div><div class="bar"></div><div class="dot"></div><div class="bar"></div><div class="label">Research</div><div class="tick"></div></div>
-
-  <!-- RESEARCH -->
-  <section id="research" style="padding-top:0;">
-    <div class="research-item">
-      <h3>LLMs — Establishing Confidence Bounds on Predictions</h3>
-      <p>M.Tech thesis, advised by Prof. Sri Vallabha Deevi. Studying black-box uncertainty quantification for LLM outputs — <span class="metric">semantic entropy</span>, <span class="metric">kernel language entropy</span>, graph-based methods (NumSet, EigV, Deg, Ecc), and conformal prediction — toward practical confidence estimates that don't require model internals.</p>
-    </div>
-    <div class="research-item">
-      <h3>Foundations</h3>
-      <p>Worked through scaling laws, SFT, PPO vs. DPO, and latent-space representations as they connect to uncertainty estimation, alongside coursework in Machine Learning Operations, Modern Computer Vision, and Mathematical Foundations for Data Science.</p>
-    </div>
-  </section>
-
-  <div class="ci-divider"><div class="tick"></div><div class="bar"></div><div class="dot"></div><div class="bar"></div><div class="label">Experience</div><div class="tick"></div></div>
-
-  <!-- EXPERIENCE -->
-  <section id="experience" style="padding-top:0;">
-    <div class="exp-item">
-      <span class="exp-role">AI/Pricing Intern</span><span class="exp-org">SKF INDIA, PUNE</span>
+<header class="nav">
+  <div class="page">
+    <a class="brand" href="#top">Aryan Prasad<span class="pm">±σ</span></a>
+    <nav aria-label="Sections">
       <ul>
-        <li>Built Power BI dashboards consolidating regional Excel pricing data, with live NetSuite data refresh</li>
-        <li>Delivered a three-page Australia pricing report — overview, obsolescence, no-sales analysis — with custom DAX measures and Power Query columns</li>
+        <li><a href="#thesis">Thesis</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
-    </div>
-    <div class="exp-item">
-      <span class="exp-role">Research Intern</span><span class="exp-org">BHEL</span>
-      <ul>
-        <li>Researched techniques to convert plastic waste into usable product</li>
-        <li>Designed refugee shelters using fusion design principles, cutting material cost by 25%</li>
-      </ul>
-    </div>
+    </nav>
+  </div>
+</header>
+
+<main class="page" id="top">
+
+  <section class="title">
+    <h1>Aryan Prasad<span class="pm">±σ</span></h1>
+    <p class="affil">M.Tech in Data Science and AI, Indian Institute of Technology Madras</p>
+    <p class="reach">
+      <a href="mailto:frozenvictorxi@gmail.com">frozenvictorxi@gmail.com</a>
+      <a href="https://www.linkedin.com/in/aryan-prasad-360079258/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/Keshav0141" target="_blank">GitHub</a>
+    </p>
+    <p class="abstract measure">I build ways to tell when a language model's answer can be trusted. My M.Tech thesis combines several uncertainty-quantification methods into one ensemble that flags shaky answers, so they can go to a bigger model instead of straight to the user. Before this I studied mechanical engineering at IIT Madras, built a pricing engine at SKF India, and took ML projects to production with MLflow, Airflow, Docker and FastAPI.</p>
   </section>
 
-  <div class="ci-divider"><div class="tick"></div><div class="bar"></div><div class="dot"></div><div class="bar"></div><div class="label">Contact</div><div class="tick"></div></div>
-
-  <!-- CONTACT -->
-  <section id="contact" style="padding-top:0; padding-bottom:70px;">
-    <div class="contact-box">
-      <p>Working on LLM uncertainty, agentic pipelines, or anything at the intersection of ML and mechanical engineering? Let's talk.</p>
-      <a class="link-arrow" href="https://github.com/Keshav0141" target="_blank">github.com/Keshav0141 →</a>
+  <figure class="fig">
+    <div class="demo">
+      <div class="demo-top">
+        <p class="prompt"><b>Q.</b><span id="q"></span></p>
+        <div class="toggle" role="group" aria-label="Choose an example">
+          <button type="button" data-set="agree" aria-pressed="true">Answers agree</button>
+          <button type="button" data-set="scatter" aria-pressed="false">Answers scatter</button>
+        </div>
+      </div>
+      <p class="step">Five answers sampled from the model</p>
+      <ol class="samples" id="samples"></ol>
+      <p class="step">Grouped by meaning</p>
+      <div class="bar" id="bar"></div>
+      <p class="legend" id="legend"></p>
+      <dl class="stats" aria-live="polite">
+        <div><dt>Agreement</dt><dd id="agr"></dd></div>
+        <div><dt>Semantic entropy</dt><dd><span id="ent"></span> <small>of 1.61 max</small></dd></div>
+        <div><dt>Decision</dt><dd id="dec"></dd></div>
+      </dl>
     </div>
+    <figcaption><b>Figure 1.</b> One of the signals my thesis uses, on an illustrative example. The model answers the same question five times, and answers that mean the same thing are grouped. When most agree, semantic entropy is low and the answer is returned. When they scatter, entropy is high and the question goes to a larger model. Saturn's moon count is a typical case: it changed as new moons were confirmed, so the samples disagree.</figcaption>
+  </figure>
+
+  <section class="sec" id="thesis">
+    <h2>Thesis</h2>
+    <div class="measure">
+      <h3 class="thesis-title">LLMs: Establishing Confidence Bounds on Predictions</h3>
+      <p class="meta">M.Tech thesis, IIT Madras, 2025 to 2027. Advised by Prof. Sri Vallabha Deevi.</p>
+      <p class="lead">Language models sound just as sure when they're wrong. I'm building a way to estimate how far each answer can be trusted using only the model's outputs, so it works with any model behind an API, without access to its weights.</p>
+    </div>
+    <figure class="fig">
+      <ol class="pipeline">
+        <li><span class="n">1</span><h4>Sample</h4><p>Ask the model the same question several times.</p></li>
+        <li><span class="n">2</span><h4>Score</h4><p>Measure how much the answers disagree, using semantic entropy, kernel language entropy, SNNE, semantic density and graph methods (NumSet, EigV, Deg, Ecc).</p></li>
+        <li><span class="n">3</span><h4>Combine</h4><p>A cross-validated ensemble merges these signals into one confidence score, built to beat every method on its own.</p></li>
+        <li><span class="n">4</span><h4>Route</h4><p>Return confident answers and escalate unsure ones to a larger model.</p><p class="out"><span class="ok">Confident: answer</span><span class="esc">Unsure: larger model</span></p></li>
+      </ol>
+      <figcaption><b>Figure 2.</b> The thesis pipeline, from sampled answers to a decision about each one.</figcaption>
+    </figure>
+    <p class="after measure">Alongside this, I'm diagnosing where NLI-based methods go wrong and tracing each failure to a specific model behaviour.</p>
   </section>
 
-</div>
+  <section class="sec" id="projects">
+    <h2>Projects</h2>
+    <p class="tcap"><b>Table 1.</b> Selected projects and the main result of each.</p>
+    <table class="results">
+      <thead><tr><th scope="col">Project</th><th scope="col">What it does</th><th scope="col">Result</th></tr></thead>
+      <tbody>
+        <tr>
+          <th scope="row">Auto-Assessment Agent
+            <span class="links"><a href="https://auto-assessment-agent-nine.vercel.app/" target="_blank">Live demo</a><a href="https://github.com/Keshav0141/auto-assessment-agent" target="_blank">Code</a></span></th>
+          <td>Grades answers with an LLM, giving marks per question with a confidence score. Low-confidence grades are flagged using score variance and semantic clustering. FastAPI and Gemini, deployed on Vercel with PDF upload.</td>
+          <td><span class="num">0.1385</span> MAE, with 88.5% agreement <span class="sub">on 26 labelled items</span></td>
+        </tr>
+        <tr>
+          <th scope="row">GPT From Scratch
+            <span class="links"><a href="https://github.com/Keshav0141/gpt-from-scratch" target="_blank">Code</a></span></th>
+          <td>GPT-2-style transformer in PyTorch with a custom BPE tokenizer and no Hugging Face code. Perplexity tracked across model sizes to check scaling-law trends.</td>
+          <td><span class="num">~90%</span> fewer trainable parameters with LoRA <span class="sub">while keeping generation quality</span></td>
+        </tr>
+        <tr>
+          <th scope="row">CerebroNet
+            <span class="links"><a href="https://github.com/Keshav0141/DA5402_Project" target="_blank">Code</a></span></th>
+          <td>Brain-tumour MRI classifier with a full MLOps stack: a 7-stage DVC pipeline, MLflow tracking, Airflow orchestration, FastAPI on Docker Compose, Prometheus and Grafana monitoring, and CI/CD retraining.</td>
+          <td><span class="num">94%+</span> accuracy <span class="sub">best of 5 CNN architectures</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Churn Guard
+            <span class="links"><a href="https://github.com/Keshav0141/ChurnGuard" target="_blank">Code</a></span></th>
+          <td>Churn prediction on IBM Telco data comparing logistic regression, random forest and XGBoost, with SMOTE kept inside stratified cross-validation to avoid leakage and SHAP to explain the drivers.</td>
+          <td>Decision threshold set to minimise expected financial loss <span class="sub">using a CAC and LTV cost matrix</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 
-<footer>built by Aryan Prasad · 2026</footer>
+  <section class="sec" id="experience">
+    <h2>Experience</h2>
+    <ol class="entries">
+      <li>
+        <p class="when">May–Jul 2026</p>
+        <div>
+          <h3>AI/Pricing Intern, <span class="org">SKF India, Pune</span></h3>
+          <ul>
+            <li>Built an automated Power BI pricing engine with predictive DAX that analyses 32K products and projects $118M.</li>
+            <li>Engineered a Manufacturing Review Power App with concurrency locking and an Excel-to-SharePoint parser.</li>
+            <li>Designed Power Automate workflows with parallel approvals and escalation loops to stop data overrides.</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <p class="when">Jul 2025–now</p>
+        <div>
+          <h3>Teaching Assistant, <span class="org">IIT Madras</span></h3>
+          <ul>
+            <li>DA5000 Mathematical Foundations for Data Science (current): grading assignments.</li>
+            <li>DA6701 Data Science and AI in Finance: assignment and exam evaluation.</li>
+            <li>DA2101 Introduction to Computational Physics: tutorials and grading.</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <p class="when">May–Jul 2022</p>
+        <div>
+          <h3>Research Intern, <span class="org">BHEL</span></h3>
+          <ul>
+            <li>Reviewed plastic-to-product conversion techniques for feasibility and material efficiency.</li>
+            <li>Designed a refugee shelter layout that maximises usable area and cuts material use.</li>
+            <li>Estimated shelter production costs and the trade-offs for lowering cost and material overhead.</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </section>
 
+  <section class="sec" id="education">
+    <h2>Education</h2>
+    <ol class="entries">
+      <li><p class="when">2025–27</p><div><h3>M.Tech, Data Science and AI, <span class="org">IIT Madras</span></h3><p class="detail">CGPA 8.27/10. Courses include Foundations of Machine Learning, Introduction to Deep Learning, Modern Computer Vision, MLOps, Mathematical Foundations for Data Science and Recent Advances in Generative AI.</p></div></li>
+      <li><p class="when">Dec 2025</p><div><h3>JLPT N3, <span class="org">Japanese Language Proficiency Test</span></h3><p class="detail">Passed: grammar, reading and listening.</p></div></li>
+      <li><p class="when">2019–23</p><div><h3>B.Tech, Mechanical Engineering, <span class="org">IIT Madras</span></h3><p class="detail">CGPA 7.59/10</p></div></li>
+      <li><p class="when">2019</p><div><h3>Class XII, <span class="org">St. Paul School and Jr. College</span></h3><p class="detail">80.31%</p></div></li>
+      <li><p class="when">2017</p><div><h3>Class X, <span class="org">Kendriya Vidyalaya Ambajhari, Nagpur</span></h3><p class="detail">CGPA 10/10</p></div></li>
+    </ol>
+  </section>
+
+  <section class="sec" id="contact">
+    <h2>Contact</h2>
+    <p class="measure">Working on LLM reliability, MLOps or data science problems? Email is the fastest way to reach me.</p>
+    <p class="big"><a href="mailto:frozenvictorxi@gmail.com">frozenvictorxi@gmail.com</a></p>
+    <p class="also"><a href="https://www.linkedin.com/in/aryan-prasad-360079258/" target="_blank">LinkedIn</a><a href="https://github.com/Keshav0141" target="_blank">GitHub</a></p>
+  </section>
+
+</main>
+
+<footer class="page">Aryan Prasad, 2026</footer>
+
+<script>
+  const C = ['var(--blue)', 'var(--c2)', 'var(--c3)', 'var(--c4)'];
+  const D = {
+    agree: {q: 'In which year was IIT Madras founded?',
+      s: [['1959',0], ['It was founded in 1959.',0], ['1961',1], ['1959',0], ['In 1959',0]],
+      g: [['1959',4], ['1961',1]], a: '80%', e: '0.50', d: 'Return the answer', k: 'ok'},
+    scatter: {q: 'How many moons does Saturn have?',
+      s: [['146',0], ['Saturn has 274 moons.',1], ['83',2], ['146 moons',0], ['82',3]],
+      g: [['146',2], ['274',1], ['83',1], ['82',1]], a: '40%', e: '1.33', d: 'Escalate to a larger model', k: 'esc'}
+  };
+  const $ = id => document.getElementById(id);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let timers = [];
+  function show(key){
+    timers.forEach(clearTimeout); timers = [];
+    const d = D[key], ol = $('samples'), stats = document.querySelector('.stats');
+    document.querySelectorAll('.toggle button').forEach(b => b.setAttribute('aria-pressed', b.dataset.set === key));
+    $('q').textContent = d.q;
+    ol.innerHTML = '';
+    d.s.forEach(([t, c]) => { const li = document.createElement('li'); li.textContent = t; li.style.setProperty('--c', C[c]); ol.append(li); });
+    $('bar').innerHTML = d.g.map(([, n], i) => `<span style="--c:${C[i]}" data-w="${n * 20}%"></span>`).join('');
+    $('legend').innerHTML = d.g.map(([t, n], i) => `<span><i style="--c:${C[i]}"></i>${t} (${n} of 5)</span>`).join('');
+    $('agr').textContent = d.a; $('ent').textContent = d.e;
+    $('dec').textContent = d.d; $('dec').className = d.k;
+    stats.classList.remove('in');
+    const step = reduce ? 0 : 220;
+    [...ol.children].forEach((li, i) => timers.push(setTimeout(() => li.classList.add('in'), step * i)));
+    timers.push(setTimeout(() => {
+      [...ol.children].forEach(li => li.classList.add('grouped'));
+      $('bar').querySelectorAll('span').forEach(s => s.style.width = s.dataset.w);
+      stats.classList.add('in');
+    }, reduce ? 0 : step * 5 + 250));
+  }
+  document.querySelectorAll('.toggle button').forEach(b => b.addEventListener('click', () => show(b.dataset.set)));
+  show('agree');
+</script>
 </body>
 </html>
